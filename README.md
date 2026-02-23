@@ -77,8 +77,8 @@ An end-to-end RAG pipeline with hybrid dense/sparse retrieval, cross-encoder rer
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/rag.git
-cd rag
+git clone https://github.com/ayman-tech/deep-rag.git
+cd deep-rag
 ```
 
 ### 2. Create virtual environment
@@ -141,7 +141,9 @@ Swagger docs at → [http://localhost:8000/docs](http://localhost:8000/docs)
 3. ❓ Type a question and click **Ask**
 4. ✅ View the answer and expand the reasoning trace
 
-### 🔌 REST API
+### 🔌 REST API Testing
+
+Recommended to use Postman, curl commands are given below
 
 **Upload a PDF:**
 
