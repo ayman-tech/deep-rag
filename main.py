@@ -160,14 +160,31 @@ def index():
             # LEFT PANEL
             with ui.column().classes("flex-1 min-w-[360px] gap-4"):
                 with ui.card().classes("w-full p-4 shadow-md"):
-                    ui.label("Upload PDF").classes("text-lg font-bold text-purple-700")
+                    ui.label("How to use").classes("text-lg font-bold text-purple-700")
+                    ui.markdown(
+"""
+1. Upload documents using the "Upload PDF's" section (drag & drop supported)
+2. Enter query in the "Ask a Question" box.
+3. Wait for "✅ Models ready" status at the top & for indexing to finish ("⏳ Indexing..." → "✅ Loaded").
+4. Click "Ask" button (enabled after indexing & models are ready).
+5. View the answer & reasoning in "Results" section.
+
+**NOTE** : Rate limiting is enabled in Google cloud to prevent misuse, plz avoid 100+ pages docs or multiple questions to prevent rate limit hits.
+
+*Built with privacy in mind* 🔒 *Each session is fully isolated for enhanced data protection* 🛡️
+"""
+                    )
+                with ui.card().classes("w-full p-4 shadow-md"):
+                    ui.label("Upload PDF's").classes("text-lg font-bold text-purple-700")
                     ui.upload(
                         label="Drag & drop or click to upload",
                         on_upload=handle_upload,
                         auto_upload=True,
                     ).props('accept=".pdf"').classes("w-full")
-                    upload_status = ui.label("No file uploaded yet").classes("text-sm text-gray-400")
+                    upload_status = ui.label("No file uploaded yet").classes("text-sm text-gray-400")                
 
+            # RIGHT PANEL
+            with ui.column().classes("flex-1 min-w-[360px] gap-4"):
                 with ui.card().classes("w-full p-4 shadow-md"):
                     ui.label("Ask a Question").classes("text-lg font-bold text-purple-700")
                     query_input = ui.textarea(
@@ -185,8 +202,6 @@ def index():
                         spinner = ui.spinner("dots", size="lg", color="purple")
                         spinner.set_visibility(False)
 
-            # RIGHT PANEL
-            with ui.column().classes("flex-1 min-w-[360px] gap-4"):
                 with ui.card().classes("w-full p-4 min-h-[300px] shadow-md"):
                     ui.label("Results").classes("text-lg font-bold text-purple-700")
                     answer_card = ui.column().classes("w-full gap-3")
