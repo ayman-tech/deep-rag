@@ -129,6 +129,7 @@ def index():
             model_status.classes(replace="text-green-600 text-sm font-semibold")
             model_spinner.set_visibility(False)
             ask_button.enable()
+            ask_button.tooltip(None)  # Remove tooltip when models are ready
             model_timer.deactivate()
 
     # ── Layout ──
@@ -170,6 +171,8 @@ def index():
                         if not models_ready():
                             ask_button.disable()
                             ask_button.tooltip("Waiting for models to load...")
+                        else:
+                            ask_button.tooltip(None)
                         spinner = ui.spinner("dots", size="lg", color="purple")
                         spinner.set_visibility(False)
 
