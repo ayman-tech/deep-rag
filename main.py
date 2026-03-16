@@ -80,6 +80,8 @@ def index():
             upload_status.set_text(f"⏳ Indexing {name}...")
             upload_status.classes(replace="text-blue-600 text-sm")
             ui.notify(f"Indexing {name}... this may take a moment", type="info")
+            ask_button.disable()
+            ask_button.tooltip("Indexing PDF...")
 
             try:
                 await run.io_bound(ingest_pdf, temp_path, session_id)
@@ -89,6 +91,13 @@ def index():
             finally:
                 if os.path.exists(temp_path):
                     os.remove(temp_path)
+            # Re-enable Ask button only if models are ready
+            if models_ready():
+                ask_button.enable()
+                ask_button.tooltip(None)
+            else:
+                ask_button.disable()
+                ask_button.tooltip("Waiting for models to load...")
         except Exception as ex:
             ui.notify(f"Error: {ex}", type="negative")
             upload_status.set_text(f"Error: {ex}")
