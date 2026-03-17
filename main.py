@@ -56,7 +56,9 @@ async def ask_endpoint(request: QueryRequest):
 @ui.page("/")
 def index():
     # Generate a unique session ID per browser tab
-    session_id = str(uuid.uuid4())
+    if 'session_id' not in nicegui_app.storage.browser:
+        nicegui_app.storage.browser['session_id'] = str(uuid.uuid4())
+    session_id = nicegui_app.storage.browser['session_id']
 
     ui.query("body").style("margin:0; font-family:'Segoe UI',sans-serif;")
 
@@ -85,7 +87,11 @@ def index():
 
             try:
                 await run.io_bound(ingest_pdf, temp_path, session_id)
-                upload_status.set_text(f"✅ Loaded: {name}")
+                uploaded = nicegui_app.storage.user.get('uploaded_files', [])
+                if name not in uploaded:
+                    uploaded.append(name)
+                    nicegui_app.storage.user['uploaded_files'] = uploaded
+                upload_status.set_text(f"✅ Loaded: {', '.join(uploaded)}")
                 upload_status.classes(replace="text-green-600 font-semibold text-sm")
                 ui.notify(f"Successfully processed {name}", type="positive")
             finally:
@@ -181,7 +187,11 @@ def index():
                         on_upload=handle_upload,
                         auto_upload=True,
                     ).props('accept=".pdf"').classes("w-full")
-                    upload_status = ui.label("No file uploaded yet").classes("text-sm text-gray-400")                
+                    upload_status = ui.label("No file uploaded yet").classes("text-sm text-gray-400")
+                    uploaded = nicegui_app.storage.user.get('uploaded_files', [])
+                    if uploaded:
+                        upload_status.set_text(f"✅ Loaded: {', '.join(uploaded)}")
+                        upload_status.classes(replace="text-green-600 font-semibold text-sm")
 
             # RIGHT PANEL
             with ui.column().classes("flex-1 min-w-[360px] gap-4"):
@@ -218,4 +228,5 @@ def index():
 # ── Launch ──
 if __name__ in {"__main__", "__mp_main__"}:
     port = int(os.environ.get("PORT", 8080))
-    ui.run(port=port, title="DeepRAG", reload=False)
+    ui.run(port=port, title="DeepRAG", reload=False,
+           storage_secret=os.environ.get("STORAGE_SECRET", "deeprag-dev-secret-change-in-prod"))
