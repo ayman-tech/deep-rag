@@ -217,5 +217,5 @@ def index():
 
 # ── Launch ──
 if __name__ in {"__main__", "__mp_main__"}:
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT", 8080))
     ui.run(port=port, title="DeepRAG", reload=False)
